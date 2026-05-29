@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WCPL - World Championship Pool League Real-Time Scoring System">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>WCPL - World Championship Pool League</title>
+    <link rel="manifest" href="wcpl-mobile-wrapper/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="wcpl-mobile-wrapper/icon-192.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <svg class="logo" width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 8-Ball -->
+                    <circle cx="26" cy="26" r="24" fill="#1a1a1a" stroke="#00d084" stroke-width="2"/>
+                    <!-- White spot -->
+                    <circle cx="26" cy="26" r="18" fill="#ffffff"/>
+                    <!-- Black circle -->
+                    <circle cx="26" cy="26" r="12" fill="#1a1a1a"/>
+                    <!-- Green accent ring -->
+                    <circle cx="26" cy="26" r="10" fill="none" stroke="#00d084" stroke-width="1.5"/>
+                </svg>
+                <div class="logo-text">
+                    <h1>WCPL</h1>
+                    <p class="subtitle">WORLD CHAMPIONSHIP POOL LEAGUE</p>
+                </div>
+            </div>
+
+            <nav class="nav-buttons">
+                <button class="nav-btn" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-btn" onclick="showSection('players')">Players</button>
+                <button class="nav-btn" onclick="showSection('matches')">Matches</button>
+                <button class="nav-btn" onclick="showSection('compare')">Compare</button>
+                <button class="nav-btn" onclick="showSection('ratings')">Ratings</button>
+                <button class="nav-btn" onclick="showSection('export')">Export</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-container">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Players</h3>
+                        <p class="stat-number" id="totalPlayers">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Tournaments</h3>
+                        <p class="stat-number">12</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Avg. Rating</h3>
+                        <p class="stat-number" id="avgRating">1450</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Matches This Week</h3>
+                        <p class="stat-number">47</p>
+                    </div>
+                </div>
+
+                <div class="top-players">
+                    <h3>Top 10 Players</h3>
+                    <table class="players-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Rating</th>
+                                <th>Wins</th>
+                                <th>Losses</th>
+                                <th>Win %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topPlayersTable">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Players Section -->
+        <section id="players" class="section">
+            <div class="section-container">
+                <h2>Player Directory</h2>
+                <div class="add-player-form">
+                    <h3>Add New Player</h3>
+                    <form id="playerForm" onsubmit="addPlayer(event)">
+                        <input type="text" id="playerName" placeholder="Player Name" required>
+                        <input type="email" id="playerEmail" placeholder="Email" required>
+                        <input type="number" id="initialRating" placeholder="Initial Rating" value="1200" required>
+                        <button type="submit" class="btn-primary">Add Player</button>
+                    </form>
+                </div>
+
+                <div class="search-filter">
+                    <input type="text" id="playerSearch" class="search-box" placeholder="Search players...">
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="">All Ratings</option>
+                        <option value="beginner">Beginner (0-1000)</option>
+                        <option value="intermediate">Intermediate (1001-1500)</option>
+                        <option value="advanced">Advanced (1501-2000)</option>
+                        <option value="elite">Elite (2001+)</option>
+                    </select>
+                </div>
+                <table class="players-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Rating</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win %</th>
+                            <th>Joined</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersTable">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Matches Section -->
+        <section id="matches" class="section">
+            <div class="section-container">
+                <h2>Match Results</h2>
+                <div class="match-form">
+                    <h3>Record New Match</h3>
+                    <form id="matchForm" onsubmit="recordMatch(event)">
+                        <div class="form-row">
+                            <select id="player1" class="player-select" required>
+                                <option value="">Select Player 1</option>
+                            </select>
+                            <select id="player2" class="player-select" required>
+                                <option value="">Select Player 2</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="player1Score" placeholder="Player 1 Score" min="0" required>
+                            <input type="number" id="player2Score" placeholder="Player 2 Score" min="0" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Record Match</button>
+                    </form>
+                </div>
+
+                <div class="recent-matches">
+                    <h3>Recent Matches</h3>
+                    <table class="matches-table">
+                        <thead>
+                            <tr>
+                                <th>Player 1</th>
+                                <th>Score</th>
+                                <th>Player 2</th>
+                                <th>Score</th>
+                                <th>Winner</th>
+                                <th>Rating Change</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchesTable">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compare Players Section -->
+        <section id="compare" class="section">
+            <div class="section-container">
+                <h2>Compare Players</h2>
+                <div class="compare-controls">
+                    <select id="player1Select" class="player-select">
+                        <option value="">Select Player 1</option>
+                    </select>
+                    <span class="vs-text">VS</span>
+                    <select id="player2Select" class="player-select">
+                        <option value="">Select Player 2</option>
+                    </select>
+                    <button class="btn-primary" onclick="comparePlayersAction()">Compare</button>
+                </div>
+
+                <div id="compareResult" class="compare-result hidden">
+                    <div class="comparison-cards">
+                        <div class="comparison-card player-1">
+                            <h3 id="p1Name"></h3>
+                            <div class="comparison-stat">
+                                <span>Rating</span>
+                                <strong id="p1Rating"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Wins</span>
+                                <strong id="p1Wins"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Losses</span>
+                                <strong id="p1Losses"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Win Percentage</span>
+                                <strong id="p1WinPct"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Avg Points/Match</span>
+                                <strong id="p1AvgPoints"></strong>
+                            </div>
+                        </div>
+
+                        <div class="comparison-card player-2">
+                            <h3 id="p2Name"></h3>
+                            <div class="comparison-stat">
+                                <span>Rating</span>
+                                <strong id="p2Rating"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Wins</span>
+                                <strong id="p2Wins"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Losses</span>
+                                <strong id="p2Losses"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Win Percentage</span>
+                                <strong id="p2WinPct"></strong>
+                            </div>
+                            <div class="comparison-stat">
+                                <span>Avg Points/Match</span>
+                                <strong id="p2AvgPoints"></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="head-to-head">
+                        <h3>Head-to-Head Records</h3>
+                        <div class="h2h-stats">
+                            <div class="h2h-stat">
+                                <span id="p1H2HWins">0</span>
+                                <p id="p1H2HName"></p>
+                            </div>
+                            <div class="h2h-stat">
+                                <span id="p2H2HWins">0</span>
+                                <p id="p2H2HName"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rating Algorithms Section -->
+        <section id="ratings" class="section">
+            <div class="section-container">
+                <h2>Rating System & Algorithms</h2>
+                <div class="algo-cards">
+                    <div class="algo-card">
+                        <h3>Elo Rating System</h3>
+                        <p class="algo-description">Our primary rating system based on the Elo algorithm with anti-sandbag protection.</p>
+                        <div class="algo-formula">
+                            <strong>Formula:</strong>
+                            <code>Ra' = Ra + K × (W - E)</code>
+                        </div>
+                        <ul class="algo-details">
+                            <li><strong>Ra:</strong> Player's old rating</li>
+                            <li><strong>K:</strong> K-factor (varies by skill level)</li>
+                            <li><strong>W:</strong> Match result (1=win, 0=loss)</li>
+                            <li><strong>E:</strong> Expected score based on rating difference</li>
+                        </ul>
+                    </div>
+
+                    <div class="algo-card">
+                        <h3>K-Factor System</h3>
+                        <p class="algo-description">K-factor determines how much a rating can change per match.</p>
+                        <table class="k-factor-table">
+                            <tr>
+                                <th>Rating Range</th>
+                                <th>K-Factor</th>
+                            </tr>
+                            <tr>
+                                <td>0 - 1200</td>
+                                <td>32</td>
+                            </tr>
+                            <tr>
+                                <td>1201 - 1600</td>
+                                <td>24</td>
+                            </tr>
+                            <tr>
+                                <td>1601 - 2000</td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>2001+</td>
+                                <td>12</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="algo-card">
+                        <h3>Anti-Sandbag Algorithm</h3>
+                        <p class="algo-description">Prevents rating manipulation by detecting unusual win patterns.</p>
+                        <ul class="algo-details">
+                            <li><strong>Detects:</strong> Wins against much higher rated players</li>
+                            <li><strong>Flags:</strong> Unusual scoring patterns</li>
+                            <li><strong>Adjusts:</strong> Rating changes for suspicious matches</li>
+                            <li><strong>Protects:</strong> Fair competition integrity</li>
+                        </ul>
+                    </div>
+
+                    <div class="algo-card">
+                        <h3>Rating Categories</h3>
+                        <p class="algo-description">Players are categorized based on their rating range.</p>
+                        <div class="rating-categories">
+                            <div class="category">
+                                <span class="category-badge beginner">Beginner</span>
+                                <span>0 - 1000</span>
+                            </div>
+                            <div class="category">
+                                <span class="category-badge intermediate">Intermediate</span>
+                                <span>1001 - 1500</span>
+                            </div>
+                            <div class="category">
+                                <span class="category-badge advanced">Advanced</span>
+                                <span>1501 - 2000</span>
+                            </div>
+                            <div class="category">
+                                <span class="category-badge elite">Elite</span>
+                                <span>2001+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="algo-card">
+                        <h3>Win Probability Calculator</h3>
+                        <p class="algo-description">Expected win probability based on rating difference.</p>
+                        <div class="calculator">
+                            <div class="calc-input">
+                                <label>Your Rating:</label>
+                                <input type="number" id="yourRating" placeholder="1500" value="1500">
+                            </div>
+                            <div class="calc-input">
+                                <label>Opponent Rating:</label>
+                                <input type="number" id="oppRating" placeholder="1600" value="1600">
+                            </div>
+                            <button class="btn-primary" onclick="calculateWinProbability()">Calculate</button>
+                            <div id="winProbResult" class="result-box hidden">
+                                <p>Your win probability: <strong id="winProbValue">0%</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Export Section -->
+        <section id="export" class="section">
+            <div class="section-container">
+                <h2>Export Data</h2>
+                <div class="export-options">
+                    <div class="export-card">
+                        <h3>Export Players</h3>
+                        <p>Download all player data in various formats</p>
+                        <div class="export-buttons">
+                            <button class="btn-secondary" onclick="exportData('csv')">Export as CSV</button>
+                            <button class="btn-secondary" onclick="exportData('json')">Export as JSON</button>
+                        </div>
+                    </div>
+
+                    <div class="export-card">
+                        <h3>Export Match History</h3>
+                        <p>Download match results and tournament data</p>
+                        <div class="export-buttons">
+                            <button class="btn-secondary" onclick="exportHistory('csv')">Export Matches</button>
+                            <button class="btn-secondary" onclick="exportHistory('json')">Export as JSON</button>
+                        </div>
+                    </div>
+
+                    <div class="export-card">
+                        <h3>Backup Data</h3>
+                        <p>Create a complete backup of all data</p>
+                        <div class="export-buttons">
+                            <button class="btn-secondary" onclick="backupData()">Backup All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-history">
+                    <h3>Recent Exports</h3>
+                    <ul id="exportList" class="export-list">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 World Championship Pool League. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" onclick="showSection('dashboard')">Privacy Policy</a>
+                <a href="#" onclick="showSection('dashboard')">Terms of Service</a>
+                <a href="#" onclick="showSection('dashboard')">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

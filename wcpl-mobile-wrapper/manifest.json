@@ -1,0 +1,68 @@
+{
+  "name": "WCPL - World Championship Pool League",
+  "short_name": "WCPL",
+  "description": "Real-time scoring and rating system for pool tournaments",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#00d084",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "wcpl-mobile-wrapper/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "wcpl-mobile-wrapper/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "wcpl-mobile-wrapper/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "wcpl-mobile-wrapper/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "wcpl-mobile-wrapper/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "wcpl-mobile-wrapper/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "categories": ["sports", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View the WCPL dashboard",
+      "url": "/?section=dashboard",
+      "icons": [{ "src": "wcpl-mobile-wrapper/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Record Match",
+      "short_name": "Match",
+      "description": "Record a new pool match",
+      "url": "/?section=matches",
+      "icons": [{ "src": "wcpl-mobile-wrapper/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
